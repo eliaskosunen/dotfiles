@@ -1,0 +1,18 @@
+[url "https://github.com/"]
+	insteadOf = git://github.com
+	insteadOf = git@github.com
+	insteadOf = gh:
+	insteadOf = github:
+[url "https://github.com/eliaskosunen/"]
+	insteadOf = ek:
+[url "https://github.com/varuna-lang/"]
+	insteadOf = va:
+[url "https://aur.archlinux.org/"]
+	insteadOf = aur:
+[user]
+    email = elias.kosunen@gmail.com
+    name = Elias Kosunen
+[credential]
+    helper = cache --timeout=7200
+[diff]
+    tool = meld
