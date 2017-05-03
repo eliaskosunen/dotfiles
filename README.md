@@ -16,3 +16,7 @@ After that, run the prerequisite installer. There are three scripts for three pa
 Finally, run the actual installation script `install.sh`. Back up your dotfiles before running it, because otherwise the script may replace them.
 
 The script will give additional instructions in the end to finish the setup.
+
+## License
+
+Unlicense (Public domain), see LICENSE for details
