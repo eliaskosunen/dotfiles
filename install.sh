@@ -1,14 +1,14 @@
 #!/bin/bash
 
-cp -r ./files/. $HOME
+cp -r ./files/. ~
 
 echo "Setup Zsh"
 echo "Installing Oh My Zsh..."
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 echo "Setting up aliases..."
-echo "source $HOME/.bash_aliases" >> $HOME/.zshrc
-echo "export DEFAULT_USER=`whoami`" >> $HOME/.zshrc
-source $HOME/.zshrc
+echo "source ~/.bash_aliases" >> ~/.zshrc
+echo "export DEFAULT_USER=`whoami`" >> ~/.zshrc
+source ~/.zshrc
 
 echo "Installing Powerlevel9k theme..."
 git clone gh:bhilburn/powerlevel9k $ZSH_CUSTOM/themes/powerlevel9k
@@ -29,8 +29,20 @@ echo "Make Zsh the default shell"
 chsh -s $(which zsh)
 
 echo "Setup Vim"
-git clone gh:amix/vimrc $HOME/.vim_runtime
-sh $HOME/.vim_runtime/install_awesome_vimrc.sh
+git clone gh:amix/vimrc ~/.vim_runtime
+sh ~/.vim_runtime/install_awesome_vimrc.sh
+
+echo "Install Vim plugins"
+git clone gh:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+cat vimrc-top.vim ~/.vimrc > ~/.vimrc
+vim +PluginInstall +qall
+
+echo "Build ycm_core"
+EXEC_DIR=$(pwd)
+cd ~/.vim/bundle/YouCompleteMe
+git submodule update --init --recursive
+./install.py --clang-completer --system-libclang --tern-completer
+cd $EXEC_DIR
 
 echo "Setup Atom"
 read -r -p "Install Atom plugins? (Atom has to be installed) [y/N]" response

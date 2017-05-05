@@ -8,6 +8,7 @@ My dotfile setup
 * Installs atom with plugins
 * Installs custom `.gitconfig`
 * Installs (g)vim with [Awesome vimrc](https://github.com/amix/vimrc)
+* Also installs Vuncle.vim with YouCompleteMe, clang-format and user-operator
 
 ## Install
 First, clone the repository:
@@ -21,7 +22,7 @@ Please note that the script will install git if it isn't present in the system.
 
 After that, run the prerequisite installer. There are three scripts for three package managers: `apt` (Debian, \*Ubuntu), `dnf` (Fedora) and `pacman` (Arch).
 
-Finally, run the actual installation script `install.sh`. Back up your dotfiles before running it, because otherwise the script may replace them.
+Finally, run the actual installation script `install.sh`. Back up your dotfiles before running it, because the script may replace them.
 
 The script will give additional instructions in the end to finish the setup.
 
