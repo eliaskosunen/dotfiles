@@ -8,6 +8,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 echo "Setting up aliases..."
 echo "source ~/.bash_aliases" >> ~/.zshrc
 echo "export DEFAULT_USER=`whoami`" >> ~/.zshrc
+source ~/.bash_aliases
 source ~/.zshrc
 
 echo "Installing Powerlevel9k theme..."
@@ -34,6 +35,7 @@ sh ~/.vim_runtime/install_awesome_vimrc.sh
 
 echo "Install Vim plugins"
 git clone gh:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+git clone gh:Valloric/YouCompleteMe ~/.vim/bundle/YouCompleteMe
 cat vimrc-top.vim ~/.vimrc > ~/.vimrc
 vim +PluginInstall +qall
 
