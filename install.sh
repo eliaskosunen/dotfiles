@@ -2,23 +2,23 @@
 
 cp -r ./files/. ~
 
-echo "Setup Zsh"
-echo "Installing Oh My Zsh..."
+echo " ***** Setup Zsh ***** "
+echo " ***** Installing Oh My Zsh ***** "
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-echo "Setting up aliases..."
+echo " ***** Setting up aliases ***** "
 echo "source ~/.bash_aliases" >> ~/.zshrc
 echo "export DEFAULT_USER=`whoami`" >> ~/.zshrc
 source ~/.bash_aliases
 source ~/.zshrc
 
-echo "Installing Powerlevel9k theme..."
+echo " ***** Installing Powerlevel9k theme ***** "
 git clone gh:bhilburn/powerlevel9k $ZSH_CUSTOM/themes/powerlevel9k
-echo "Installing Zsh syntax highlighting plugin..."
+echo " ***** Installing Zsh syntax highlighting plugin ***** "
 git clone gh:zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-echo "Installing Zsh autosuggestions plugin..."
+echo " ***** Installing Zsh autosuggestions plugin ***** "
 git clone gh:zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
-echo "Install Powerline fonts for Zsh"
+echo " ***** Install Powerline fonts for Zsh ***** "
 git clone gh:powerline/fonts powerline-fonts
 cd powerline-fonts
 ./install.sh
@@ -26,35 +26,30 @@ cd ..
 rm -rf powerline-fonts
 reload
 
-echo "Make Zsh the default shell"
+echo " ***** Make Zsh the default shell ***** "
 chsh -s $(which zsh)
 
-echo "Setup Vim"
+echo " ***** Setup Vim ***** "
 git clone gh:amix/vimrc ~/.vim_runtime
 sh ~/.vim_runtime/install_awesome_vimrc.sh
 
-echo "Install Vim plugins"
+echo " ***** Install Vim plugins ***** "
 git clone gh:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 git clone gh:Valloric/YouCompleteMe ~/.vim/bundle/YouCompleteMe
-cat ~/.vimrc > .vimrc_tmp
-rm ~/.vimrc
+mv ~/.vimrc .vimrc_tmp
 cat vimrc-top.vim .vimrc_tmp > ~/.vimrc
 vim +PluginInstall +qall
 
-echo "Build ycm_core"
+echo " ***** Build ycm_core ***** "
 EXEC_DIR=$(pwd)
 cd ~/.vim/bundle/YouCompleteMe
 git submodule update --init --recursive
 ./install.py --clang-completer --system-libclang --tern-completer
 cd $EXEC_DIR
 
-echo "Setup Atom"
-read -r -p "Install Atom plugins? (Atom has to be installed) [y/N]" response
-response=${response,,} # tolower
-if [[ $response =~ ^(yes|y| ) ]]; then
-    apm --version
-    apm install atom-beautify autocomplete-clang busy-signal clang-format docblockr file-icons highlight-selected language-cmake language-generic-config language-llvm language-rust language-varuna linter linter-clang linter-ui-default minimap minimap-highlight-selected open-recent
-fi
+echo " ***** Setup Atom ***** "
+apm --version
+apm install atom-beautify autocomplete-clang busy-signal clang-format docblockr file-icons highlight-selected language-cmake language-generic-config language-llvm language-rust language-varuna linter linter-clang linter-ui-default minimap minimap-highlight-selected open-recent
 
 echo "What you need to do now:"
 echo " 1) Edit ~/.zshrc:"
