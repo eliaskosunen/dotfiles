@@ -36,7 +36,9 @@ sh ~/.vim_runtime/install_awesome_vimrc.sh
 echo "Install Vim plugins"
 git clone gh:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 git clone gh:Valloric/YouCompleteMe ~/.vim/bundle/YouCompleteMe
-cat vimrc-top.vim ~/.vimrc > ~/.vimrc
+cat ~/.vimrc > .vimrc_tmp
+rm ~/.vimrc
+cat vimrc-top.vim .vimrc_tmp > ~/.vimrc
 vim +PluginInstall +qall
 
 echo "Build ycm_core"
