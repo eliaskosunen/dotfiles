@@ -1,14 +1,22 @@
 # dotfiles
 My dotfile setup
 
+## Disclaimer
+
+THE INSTALLATION SCRIPT `install.sh` WILL OVERWRITE SOME OF YOUR DOTFILES.
+I take no responsibility should you lose some or all of your personal configuration. 
+
+To get the list of files to be overwritten, see the directory `files`.
+Back the similarly named files from your home directory should you ever want to go back.
+
+You've been warned.
+
 ## Features
 
 * Various shell aliases, see `.bash_aliases`
 * Installs zsh, oh-my-zsh, some plugins and makes zsh the login shell
-* Installs atom with plugins
 * Installs custom `.gitconfig`
-* Installs (g)vim with [Awesome vimrc](https://github.com/amix/vimrc)
-* Also installs Vuncle.vim with YouCompleteMe, clang-format and user-operator
+* Installs vim with Vuncle.vim and some plugins, for example YouCompleteMe
 
 ## Install
 First, clone the repository:
