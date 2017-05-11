@@ -24,6 +24,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'maxbrunsfeld/vim-yankstack'
 Plugin 'groenewege/vim-less'
+Plugin 'flazz/vim-colorschemes'
 
 call vundle#end()
 filetype plugin indent on
@@ -96,7 +97,7 @@ set novisualbell
 set t_vb=
 set tm=500
 
-set number
+"set number
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Appearance
@@ -110,10 +111,6 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-try
-    colorscheme solarized
-catch
-endtry
 
 set background=dark
 
@@ -373,32 +370,6 @@ map <leader>nn :NERDTreeToggle<cr>
 map <leader>nb :NERDTreeFromBookmark<Space>
 map <leader>nf :NERDTreeFind<cr>
 
-" Lightline
-let g:lightline = {
-      \ 'colorscheme': 'solarized',
-      \ }
-
-let g:lightline = {
-      \ 'colorscheme': 'solarized',
-      \ 'active': {
-      \   'left': [ ['mode', 'paste'],
-      \             ['fugitive', 'readonly', 'filename', 'modified'] ],
-      \   'right': [ [ 'lineinfo' ], ['percent'] ]
-      \ },
-      \ 'component': {
-      \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
-      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
-      \ },
-      \ 'component_visible_condition': {
-      \   'readonly': '(&filetype!="help"&& &readonly)',
-      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
-      \ },
-      \ 'separator': { 'left': ' ', 'right': ' ' },
-      \ 'subseparator': { 'left': ' ', 'right': ' ' }
-      \ }
-
 " Syntastic
 " Python
 let g:syntastic_python_checkers=['pyflakes']
@@ -525,3 +496,8 @@ cno $p e ~/code/projects/
 cno $j e ./
 cno $c e <C-\>eCurrentFileDir("e")<cr>
 cno $q <C-\>eDeleteTillSlash()<cr>
+
+try
+    colorscheme peaksea
+catch
+endtry

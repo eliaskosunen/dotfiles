@@ -30,9 +30,12 @@ echo " ***** Make Zsh the default shell ***** "
 chsh -s $(which zsh)
 
 echo " ***** Setup Vim ***** "
+mkdir -p ~/.vim/tmp ~/.vim/colors
 git clone gh:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 git clone gh:Valloric/YouCompleteMe ~/.vim/bundle/YouCompleteMe
+mkdir ~/.vim/tmp/backup ~/.vim/tmp/undo
 vim +PluginInstall +qall
+cp ~/.vim/bundle/vim-colorschemes/colors/* ~/.vim/colors
 
 echo " ***** Build ycm_core ***** "
 EXEC_DIR=$(pwd)
