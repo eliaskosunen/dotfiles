@@ -30,14 +30,8 @@ echo " ***** Make Zsh the default shell ***** "
 chsh -s $(which zsh)
 
 echo " ***** Setup Vim ***** "
-git clone gh:amix/vimrc ~/.vim_runtime
-sh ~/.vim_runtime/install_awesome_vimrc.sh
-
-echo " ***** Install Vim plugins ***** "
 git clone gh:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 git clone gh:Valloric/YouCompleteMe ~/.vim/bundle/YouCompleteMe
-mv ~/.vimrc .vimrc_tmp
-cat vimrc-top.vim .vimrc_tmp > ~/.vimrc
 vim +PluginInstall +qall
 
 echo " ***** Build ycm_core ***** "
@@ -46,10 +40,6 @@ cd ~/.vim/bundle/YouCompleteMe
 git submodule update --init --recursive
 ./install.py --clang-completer --system-libclang --tern-completer
 cd $EXEC_DIR
-
-echo " ***** Setup Atom ***** "
-apm --version
-apm install atom-beautify autocomplete-clang busy-signal clang-format docblockr file-icons highlight-selected language-cmake language-generic-config language-llvm language-rust language-varuna linter linter-clang linter-ui-default minimap minimap-highlight-selected open-recent
 
 echo "What you need to do now:"
 echo " 1) Edit ~/.zshrc:"
