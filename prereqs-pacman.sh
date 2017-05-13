@@ -1,5 +1,5 @@
 #!/bin/bash
 
-sudo pacman -S curl git zsh gvim clang npm python2 base-devel
+sudo pacman -Sy curl git zsh gvim clang npm python2 base-devel
 
 curl https://sh.rustup.rs -sSf | sh

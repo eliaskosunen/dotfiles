@@ -22,7 +22,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 ## Features
 
 * Various shell aliases, see `.bash_aliases`
-* Installs zsh, oh-my-zsh, some plugins and makes zsh the login shell
+* Installs zsh, Oh My Zsh, some plugins and makes zsh the login shell
 * Installs custom `.gitconfig`
 * Installs vim with Vuncle.vim and some plugins, for example YouCompleteMe
 

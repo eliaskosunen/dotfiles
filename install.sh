@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo " ***** Remove Oh My Zsh ***** "
+rm -rf ~/.oh-my-zsh
+
+echo " ***** Install dotfiles ***** "
 cp -r ./files/. ~
 
 echo " ***** Setup Zsh ***** "
