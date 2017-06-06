@@ -16,6 +16,7 @@ alias dt="cd ~/Desktop"
 alias c="cd ~/code"
 alias p="cd ~/code/projects"
 alias gti="git"
+alias gf="fg"
 
 # List all files in colorized long format
 alias ll="ls -lF --color"
