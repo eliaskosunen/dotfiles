@@ -25,6 +25,7 @@ Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'maxbrunsfeld/vim-yankstack'
 Plugin 'groenewege/vim-less'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'wesQ3/vim-windowswap'
 
 call vundle#end()
 filetype plugin indent on
