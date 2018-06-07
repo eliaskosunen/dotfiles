@@ -12,7 +12,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 echo " ***** Setting up aliases ***** "
 echo "source ~/.bash_aliases" >> ~/.zshrc
 echo "export DEFAULT_USER=`whoami`" >> ~/.zshrc
-source ~/.bash_aliases
+source ~/.profile
 source ~/.zshrc
 
 echo " ***** Installing Powerlevel9k theme ***** "
@@ -34,18 +34,20 @@ echo " ***** Make Zsh the default shell ***** "
 chsh -s $(which zsh)
 
 echo " ***** Setup Vim ***** "
+EXEC_DIR=$(pwd)
 mkdir -p ~/.vim/tmp ~/.vim/colors
 git clone gh:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 git clone gh:Valloric/YouCompleteMe ~/.vim/bundle/YouCompleteMe
+cd ~/.vim/bundle/YouCompleteMe
+git submodule update --init --recursive
 mkdir ~/.vim/tmp/backup ~/.vim/tmp/undo
+cd $EXEC_DIR
 vim +PluginInstall +qall
 cp ~/.vim/bundle/vim-colorschemes/colors/* ~/.vim/colors
 
 echo " ***** Build ycm_core ***** "
-EXEC_DIR=$(pwd)
 cd ~/.vim/bundle/YouCompleteMe
-git submodule update --init --recursive
-./install.py --system-libclang --all
+./install.py --system-libclang --clang-completer --js-completer --rust-completer
 cd $EXEC_DIR
 
 echo "What you need to do now:"
