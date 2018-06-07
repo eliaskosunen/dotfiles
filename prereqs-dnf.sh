@@ -12,7 +12,7 @@ sudo npm install -g typescript ts-server
 rpm --import "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
 sudo curl https://download.mono-project.com/repo/centos7-stable.repo | sudo tee /etc/yum.repos.d/mono-centos7-stable.repo
 sudo dnf update
-sudo fnt install mono-complete
+sudo fnt install mono-devel
 
 # rust
 curl https://sh.rustup.rs -sSf | sh

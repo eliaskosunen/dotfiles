@@ -38,7 +38,7 @@ else
     echo "deb https://download.mono-project.com/repo/ubuntu stable-${UBUNTU_CODENAME} main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
 fi
 sudo apt-get update
-sudo apt-get install -y mono-complete
+sudo apt-get install -y mono-devel mono-dbg
 
 # rust
 curl https://sh.rustup.rs -sSf | sh
