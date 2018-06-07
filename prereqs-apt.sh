@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo apt-get update
-sudo apt-get install -y git curl zsh build-essential cmake python-dev python3-dev vim-gtk3
+sudo apt-get install -y git curl zsh build-essential cmake python-dev python3-dev vim-gtk3 unzip
 
 . /etc/os-release
 

@@ -33,6 +33,19 @@ reload
 echo " ***** Make Zsh the default shell ***** "
 chsh -s $(which zsh)
 
+echo " ***** Install Hack (font) ***** "
+get_latest_github_release() {
+    curl --silent "https://api.github.com/repos/$1/releases/latest" |
+        grep '"tag_name":' |
+        sed -E 's/.*"([^"]+)".*/\1/'
+}
+HACK_VERSION=$(get_latest_github_release "source-foundry/Hack")
+curl -sL https://github.com/source-foundry/Hack/releases/download/${HACK_VERSION}/Hack-${HACK_VERSION}-ttf.tar.gz | tar xz
+mkdir -p ~/.fonts/hack
+cp ttf/* ~/.fonts/hack
+rm -rf ttf
+sudo fc-cache -fv
+
 echo " ***** Setup Vim ***** "
 EXEC_DIR=$(pwd)
 mkdir -p ~/.vim/tmp ~/.vim/colors
