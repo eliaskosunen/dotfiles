@@ -30,11 +30,18 @@ OTHER DEALINGS IN THE SOFTWARE.
 First, clone the repository:
 
 ```sh
-git clone https://github.com/eliaskosunen/dotfiles ~/dotfiles
+$ git clone https://github.com/eliaskosunen/dotfiles ~/dotfiles
+$ cd dotfiles
 ```
 
 Alternatively, download the tarball if you don't want to use git.
 Please note that the script will install git if it isn't present in the system.
+
+```sh
+$ wget https://github.com/eliaskosunen/dotfiles/archive/master.tar.gz
+$ tar xzf master.tar.gz
+$ cd dotfiles-master
+```
 
 After that, run the prerequisite installer. There are three scripts for three package managers: `apt` (Debian, \*Ubuntu), `dnf` (Fedora) and `pacman` (Arch).
 
