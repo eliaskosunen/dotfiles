@@ -1,18 +1,45 @@
-[url "https://github.com/"]
-	insteadOf = git://github.com
-	insteadOf = git@github.com
-	insteadOf = gh:
-	insteadOf = github:
-[url "https://github.com/eliaskosunen/"]
-	insteadOf = ek:
-[url "https://github.com/varuna-lang/"]
-	insteadOf = va:
-[url "https://aur.archlinux.org/"]
-	insteadOf = aur:
 [user]
     email = elias.kosunen@gmail.com
     name = Elias Kosunen
 [credential]
     helper = cache --timeout=7200
 [diff]
-    tool = meld
+    tool = vimdiff
+[merge]
+    tool = vimdiff
+
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+    showbranch = auto
+    ui = true
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = cyan
+
+[url "https://github.com/"]
+	insteadOf = gh:
+	insteadOf = github:
+[url "https://github.com/eliaskosunen/"]
+	insteadOf = ek:
+[url "https://aur.archlinux.org/"]
+	insteadOf = aur:
+[url "https://gitlab.com/"]
+    insteadOf = gl:
+    insteadOf = gitlab:
+[url "https://bitbucket.org/"]
+    insteadOf = bb:
+    insteadOf = bitbucket:
+[url "https://gist.github.com/"]
+    insteadOf = gist:

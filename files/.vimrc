@@ -9,6 +9,7 @@ call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'rdnetto/YCM-generator'
 Plugin 'rhysd/vim-clang-format'
 Plugin 'kana/vim-operator-user'
 Plugin 'mileszs/ack.vim'
@@ -25,7 +26,12 @@ Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'maxbrunsfeld/vim-yankstack'
 Plugin 'groenewege/vim-less'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'klen/python-mode'
 Plugin 'wesQ3/vim-windowswap'
+Plugin 'maksimr/vim-jsbeautify'
+Plugin 'JamshedVesuna/vim-markdown-preview'
+Plugin 'suan/vim-instant-markdown'
+Plugin 'vim-latex/vim-latex'
 
 call vundle#end()
 filetype plugin indent on
@@ -131,9 +137,9 @@ set ffs=unix,dos,mac
 
 " Set font
 if has("win16") || has("win32")
-    set gfn=Hack:h14,Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
-elseif has("linux") || has("gui_gtk2")
-    set gfn=Hack\ 14,Source\ Code\ Pro\ 12, Bitstream\ Vera\ Sans\ Mono\ 11
+    set gfn=Hack:h10,Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
+elseif has("linux") || has("gui_gtk2") || has("gui_gtk3")
+    set gfn=Hack\ 10,Source\ Code\ Pro\ 12,Bitstream\ Vera\ Sans\ Mono\ 11
 elseif has("unix")
     set gfn=Monospace\ 11
 endif
@@ -395,6 +401,16 @@ nnoremap <silent> <leader>c :call SyntasticCheckCoffeescript()<cr>
 let g:gitgutter_enabled=0
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
 
+" Markdown render
+let vim_markdown_preview_github=0
+
+" vim-latex
+let g:Tex_DefaultTargetFormat="pdf"
+let g:Tex_CompileRule_pdf="pdflatex -interaction=nonstopmode --shell-escape $*"
+
+" Python mode
+let g:pymode_python = 'python3'
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -492,9 +508,8 @@ vmap <silent> <expr> p <sid>Repl()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 cno $h e ~/
-cno $d e ~/Desktop/
 cno $p e ~/code/projects/
-cno $j e ./
+cno $d e ./
 cno $c e <C-\>eCurrentFileDir("e")<cr>
 cno $q <C-\>eDeleteTillSlash()<cr>
 

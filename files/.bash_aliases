@@ -1,22 +1,9 @@
 #!/usr/bin/env bash
 
-# Easier navigation
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-alias cd..="cd .."
-alias ~="cd ~"
-alias -- -="cd -"
-
 # Shortcuts
-alias doc="cd ~/Documents"
-alias dl="cd ~/Downloads"
-alias dt="cd ~/Desktop"
 alias c="cd ~/code"
 alias p="cd ~/code/projects"
 alias gti="git"
-alias gf="fg"
 
 # List all files in colorized long format
 alias ll="ls -lF --color"

@@ -45,12 +45,13 @@ echo " ***** Build ycm_core ***** "
 EXEC_DIR=$(pwd)
 cd ~/.vim/bundle/YouCompleteMe
 git submodule update --init --recursive
-./install.py --clang-completer --system-libclang --tern-completer
+./install.py --system-libclang --all
 cd $EXEC_DIR
 
 echo "What you need to do now:"
 echo " 1) Edit ~/.zshrc:"
 echo "    - Change theme to either 'agnoster' or 'powerlevel9k/powerlevel9k'"
-echo "    - Add following plugins: git bower Composer git-flow pip python zsh-autosuggestions zsh-syntax-highlighting"
-echo "    - Add plugin for your operating system: archlinux, debian, brew, dnf"
+echo "    - Add following plugins: command-not-found colored-man-pages colorize cp git extract node npm pip python virtualenv web-search zsh-autosuggestions zsh-syntax-highlighting"
+echo "    - Add plugin for your operating system: archlinux, debian, brew, dnf, systemd"
+echo "    - Export 'vim' as EDITOR"
 echo " 2) Relogin to make Zsh the default shell"
