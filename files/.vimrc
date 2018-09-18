@@ -7,31 +7,78 @@ filetype off
 set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+" Package manager
 Plugin 'VundleVim/Vundle.vim'
+" Autocompletion
 Plugin 'Valloric/YouCompleteMe'
+" Generate ycm config files
 Plugin 'rdnetto/YCM-generator'
+" clang-format
 Plugin 'rhysd/vim-clang-format'
+" User defined operator
 Plugin 'kana/vim-operator-user'
-Plugin 'mileszs/ack.vim'
-Plugin 'vim-scripts/bufexplorer.zip'
-Plugin 'ctrlpvim/ctrlp.vim'
+" Buffer management
+Plugin 'jlanzarotta/bufexplorer'
+" Statusline
 Plugin 'itchyny/lightline.vim'
+" Directory listings
 Plugin 'scrooloose/nerdtree'
+" Most recently used files
 Plugin 'vim-scripts/mru.vim'
+" Syntax checking
 Plugin 'scrooloose/syntastic'
+" Comment selection out
 Plugin 'tpope/vim-commentary'
+" Expand/shrink selection with +/_
 Plugin 'terryma/vim-expand-region'
+" Git
 Plugin 'tpope/vim-fugitive'
-Plugin 'michaeljsmith/vim-indent-object'
+" Stacking yank history
 Plugin 'maxbrunsfeld/vim-yankstack'
+" LESS syntax highlighting
 Plugin 'groenewege/vim-less'
+" Various colorschemes
 Plugin 'flazz/vim-colorschemes'
+" Python
 Plugin 'klen/python-mode'
+" Swap windows with <leader>ww
 Plugin 'wesQ3/vim-windowswap'
+" Beautify JS
 Plugin 'maksimr/vim-jsbeautify'
+" Preview markdown
 Plugin 'JamshedVesuna/vim-markdown-preview'
 Plugin 'suan/vim-instant-markdown'
+" LaTeX
 Plugin 'vim-latex/vim-latex'
+" Vue.js
+Plugin 'posva/vim-vue'
+" Twig
+Plugin 'lumiliet/vim-twig'
+" TypeScript
+Plugin 'leafgarland/typescript-vim'
+" Indentation indicators
+Plugin 'Yggdroot/indentLine'
+" Multiple cursors
+Plugin 'terryma/vim-multiple-cursors'
+" UNIX helpers
+Plugin 'tpope/vim-eunuch'
+" s-selector for surroundings
+Plugin 'tpope/vim-surround'
+" 'Sensible' defaults
+Plugin 'tpope/vim-sensible'
+" Detect indentation
+Plugin 'tpope/vim-sleuth'
+" HTML, CSS, JS
+Plugin 'mattn/emmet-vim'
+" Git status indicators
+Plugin 'airblade/vim-gitgutter'
+" Fuzzy search
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+" Markdown tables
+Plugin 'dhruvasagar/vim-table-mode'
+" Linting
+Plugin 'w0rp/ale'
 
 call vundle#end()
 filetype plugin indent on
@@ -52,9 +99,6 @@ let g:mapleader = "\<Space>"
 
 " Fast saving
 nmap <leader>w :w<cr>
-
-" Open a new file
-nmap <leader>n :CtrlP<cr>
 
 " :WW sudo saves the file
 command WW w !sudo tee % > /dev/null
@@ -104,7 +148,7 @@ set novisualbell
 set t_vb=
 set tm=500
 
-"set number
+set number
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Appearance
@@ -117,7 +161,6 @@ syntax enable
 if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
-
 
 set background=dark
 
@@ -347,6 +390,9 @@ vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
 """ Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" fzf
+map <leader>, :Files<CR>
+
 " BufExplorer
 let g:bufExplorerDefaultHelp=0
 let g:bufExplorerShowRelativePath=1
@@ -358,16 +404,6 @@ map <leader>o :BufExplorer<cr>
 let MRU_Max_Entries = 400
 map <leader>f :MRU<CR>
 
-" CTRL-P
-let g:ctrlp_working_path_mode = 0
-
-let g:ctrlp_map = '<c-f>'
-map <leader>j :CtrlP<cr>
-map <c-b> :CtrlPBuffer<cr>
-
-let g:ctrlp_max_height = 20
-let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git\|^\.coffee'
-
 " NERDTree
 let g:NERDTreeWinPos = "right"
 let NERDTreeShowHidden=0
@@ -377,7 +413,31 @@ map <leader>nn :NERDTreeToggle<cr>
 map <leader>nb :NERDTreeFromBookmark<Space>
 map <leader>nf :NERDTreeFind<cr>
 
+" Sleuth
+if get(g:, '_has_set_default_indent_settings', 0) == 0
+    set expandtab
+    set tabstop=4
+    set shiftwidth=4
+    let g:_has_set_default_indent_settings = 1
+endif
+
+" TableMode
+let g:table_mode_corner="|"
+
+" ALE
+let g:ale_c_parse_compile_commands = 1
+let g:ale_c_parse_makefile = 1
+
 " Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 " Python
 let g:syntastic_python_checkers=['pyflakes']
 
@@ -385,7 +445,6 @@ let g:syntastic_python_checkers=['pyflakes']
 let g:syntastic_javascript_checkers = ['jshint']
 
 " Go
-let g:syntastic_auto_loc_list = 1
 let g:syntastic_go_checkers = ['go', 'golint', 'errcheck']
 
 " Custom CoffeeScript SyntasticCheck
