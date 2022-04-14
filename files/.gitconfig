@@ -28,18 +28,18 @@
     changed = yellow
     untracked = cyan
 
-[url "https://github.com/"]
+[url "git@github.com:"]
 	insteadOf = gh:
 	insteadOf = github:
-[url "https://github.com/eliaskosunen/"]
+[url "git@github.com:eliaskosunen/"]
 	insteadOf = ek:
 [url "https://aur.archlinux.org/"]
 	insteadOf = aur:
-[url "https://gitlab.com/"]
+[url "git@gitlab.com:"]
     insteadOf = gl:
     insteadOf = gitlab:
-[url "https://bitbucket.org/"]
+[url "git@bitbucket.org:"]
     insteadOf = bb:
     insteadOf = bitbucket:
-[url "https://gist.github.com/"]
+[url "git@gist.github.com:"]
     insteadOf = gist:

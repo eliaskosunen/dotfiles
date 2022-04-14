@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 echo " ***** Remove Oh My Zsh ***** "
 rm -rf ~/.oh-my-zsh
@@ -28,7 +28,6 @@ cd powerline-fonts
 ./install.sh
 cd ..
 rm -rf powerline-fonts
-reload
 
 echo " ***** Make Zsh the default shell ***** "
 chsh -s $(which zsh)
@@ -50,18 +49,10 @@ echo " ***** Setup Vim ***** "
 EXEC_DIR=$(pwd)
 mkdir -p ~/.vim/tmp ~/.vim/colors
 git clone gh:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-git clone gh:Valloric/YouCompleteMe ~/.vim/bundle/YouCompleteMe
-cd ~/.vim/bundle/YouCompleteMe
-git submodule update --init --recursive
 mkdir ~/.vim/tmp/backup ~/.vim/tmp/undo
 cd $EXEC_DIR
 vim +PluginInstall +qall
 cp ~/.vim/bundle/vim-colorschemes/colors/* ~/.vim/colors
-
-echo " ***** Build ycm_core ***** "
-cd ~/.vim/bundle/YouCompleteMe
-./install.py --system-libclang --clang-completer --js-completer --rust-completer
-cd $EXEC_DIR
 
 echo "What you need to do now:"
 echo " 1) Edit ~/.zshrc:"
