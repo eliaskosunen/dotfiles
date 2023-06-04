@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo dnf update -y
-sudo dnf install -y tailscale neofetch
+sudo dnf install -y zsh neofetch util-linux
 sudo dnf group install -y "Development Tools" "C Development Tools and Libraries" "Hardware Support" "Sound and Video" "Fonts"
 
 sudo dnf config-manager -y --add-repo https://pkgs.tailscale.com/stable/fedora/tailscale.repo
