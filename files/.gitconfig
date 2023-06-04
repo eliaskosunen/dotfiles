@@ -28,13 +28,16 @@
     changed = yellow
     untracked = cyan
 
+[core]
+    excludesFile = /home/elias/.gitignore
+[init]
+    defaultBranch = master
+
 [url "git@github.com:"]
-	insteadOf = gh:
-	insteadOf = github:
+    insteadOf = gh:
+    insteadOf = github:
 [url "git@github.com:eliaskosunen/"]
-	insteadOf = ek:
-[url "https://aur.archlinux.org/"]
-	insteadOf = aur:
+    insteadOf = ek:
 [url "git@gitlab.com:"]
     insteadOf = gl:
     insteadOf = gitlab:

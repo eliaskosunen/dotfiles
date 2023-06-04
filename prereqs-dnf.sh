@@ -1,12 +1,11 @@
 #!/bin/bash
 
-sudo dnf -y upgrade
-sudo dnf -y install git curl wget zsh automake gcc gcc-c++ make kernel-devel cmake clang clang-devel vim-enhanced vim-X11 unzip neofetch ccache util-linux-user
+sudo dnf update -y
+sudo dnf install -y tailscale neofetch
+sudo dnf group install -y "Development Tools" "C Development Tools and Libraries" "Hardware Support" "Sound and Video" "Fonts"
 
-# node, typescript
-curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
-sudo dnf -y install nodejs
-sudo npm install -g typescript ts-server
+sudo dnf config-manager -y --add-repo https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+sudo dnf install -y tailscale
+sudo systemctl enable --now tailscaled
 
-sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-sudo flatpak install flathub --noninteractive -y org.chromium.Chromium com.jetbrains.CLion com.visualstudio.code com.spotify.Client com.slack.Slack com.telegram.desktop
+sudo flatpak install flathub --noninteractive -y org.chromium.Chromium com.visualstudio.code com.spotify.Client com.slack.Slack org.telegram.desktop

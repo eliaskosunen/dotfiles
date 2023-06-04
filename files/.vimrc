@@ -9,77 +9,26 @@ call vundle#begin()
 
 " Package manager
 Plugin 'VundleVim/Vundle.vim'
-" Autocompletion
-Plugin 'Valloric/YouCompleteMe'
-" Generate ycm config files
-Plugin 'rdnetto/YCM-generator'
-" clang-format
-Plugin 'rhysd/vim-clang-format'
-" User defined operator
-"Plugin 'kana/vim-operator-user'
-" Buffer management
-"Plugin 'jlanzarotta/bufexplorer'
 " Statusline
 Plugin 'itchyny/lightline.vim'
 " Directory listings
 Plugin 'scrooloose/nerdtree'
-" Most recently used files
-Plugin 'vim-scripts/mru.vim'
-" Syntax checking
-"Plugin 'scrooloose/syntastic'
-" Comment selection out
-Plugin 'tpope/vim-commentary'
-" Expand/shrink selection with +/_
-"Plugin 'terryma/vim-expand-region'
 " Git
 Plugin 'tpope/vim-fugitive'
 " Stacking yank history
 Plugin 'maxbrunsfeld/vim-yankstack'
-" LESS syntax highlighting
-Plugin 'groenewege/vim-less'
 " Various colorschemes
 Plugin 'flazz/vim-colorschemes'
-" Python
-Plugin 'klen/python-mode'
 " Swap windows with <leader>ww
 Plugin 'wesQ3/vim-windowswap'
-" Beautify JS
-Plugin 'maksimr/vim-jsbeautify'
-" Preview markdown
-"Plugin 'tpope/vim-markdown'
-"Plugin 'JamshedVesuna/vim-markdown-preview'
-Plugin 'suan/vim-instant-markdown'
-" LaTeX
-Plugin 'vim-latex/vim-latex'
-" Vue.js
-"Plugin 'posva/vim-vue'
-" Twig
-"Plugin 'lumiliet/vim-twig'
-" TypeScript
-"Plugin 'leafgarland/typescript-vim'
 " Indentation indicators
 Plugin 'Yggdroot/indentLine'
-" Multiple cursors
-"Plugin 'terryma/vim-multiple-cursors'
 " UNIX helpers
 Plugin 'tpope/vim-eunuch'
-" s-selector for surroundings
-Plugin 'tpope/vim-surround'
-" 'Sensible' defaults
-"Plugin 'tpope/vim-sensible'
 " Detect indentation
 Plugin 'tpope/vim-sleuth'
 " HTML, CSS, JS
 Plugin 'mattn/emmet-vim'
-" Git status indicators
-"Plugin 'airblade/vim-gitgutter'
-" Fuzzy search
-"Plugin 'junegunn/fzf'
-"Plugin 'junegunn/fzf.vim'
-" Markdown tables
-"Plugin 'dhruvasagar/vim-table-mode'
-" Linting
-"Plugin 'w0rp/ale'
 
 call vundle#end()
 filetype plugin indent on
@@ -371,36 +320,9 @@ inoremap $e ""<esc>i
 
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""" Ack searching and cope displaying
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-if executable('ag')
-    let g:ackprg = 'ag --vimgrep --smart-case'
-endif
-
-vnoremap <silent> gv :call VisualSelection('gv', '')<CR>
-
-" Open Ack
-map <leader>g :Ack
-
-" Search and replace selection
-vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" fzf
-map <leader>, :Files<CR>
-
-" BufExplorer
-let g:bufExplorerDefaultHelp=0
-let g:bufExplorerShowRelativePath=1
-let g:bufExplorerFindActive=1
-let g:bufExplorerSortBy='name'
-map <leader>o :BufExplorer<cr>
-
 " MRU
 let MRU_Max_Entries = 400
 map <leader>f :MRU<CR>
@@ -460,19 +382,6 @@ nnoremap <silent> <leader>c :call SyntasticCheckCoffeescript()<cr>
 " Git gutter
 let g:gitgutter_enabled=0
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
-
-" Markdown render
-let vim_markdown_preview_github=0
-
-" vim-latex
-let g:Tex_DefaultTargetFormat="pdf"
-let g:Tex_CompileRule_pdf="pdflatex -synctex=1 -interaction=nonstopmode $*"
-
-" Python mode
-let g:pymode_python = 'python3'
-
-" Markdown
-let g:instant_markdown_slow = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Helper functions
