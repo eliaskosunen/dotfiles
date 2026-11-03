@@ -1,54 +1,92 @@
 # dotfiles
-My dotfile setup
 
-## Disclaimer
+My shell, git, Vim and gdb configuration, and scripts that set up a new machine
+with it.
+The scripts are written for Fedora (44 and 45) and Ubuntu (24.04 and 26.04).
 
-THE INSTALLATION SCRIPT `install.sh` WILL OVERWRITE SOME OF YOUR DOTFILES.
-I take no responsibility should you lose some or all of your personal configuration. 
+## What's included
 
-To get the list of files to be overwritten, see the directory `files`.
-Back the similarly named files from your home directory should you ever want to go back.
+The files in `files/` are linked into the home directory at the same paths:
 
-You've been warned.
+ - `.zshrc`: Oh My Zsh with the agnoster theme, and helpers for loading secrets
+   from the keyring
+ - `.zshenv`: sets up the Rust toolchain environment
+ - `.bash_aliases`: aliases and build environment variables, used by zsh too
+ - `.gitconfig` and `.config/git/ignore`: git settings and the global ignore list
+ - `.vimrc`: Vim settings, with plugins managed by Vundle
+ - `.gdbinit`: gdb settings
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+## Installation
 
-## Features
-
-* Various shell aliases, see `.bash_aliases`
-* Installs zsh, Oh My Zsh, some plugins and makes zsh the login shell
-* Installs custom `.gitconfig`
-* Installs vim with Vuncle.vim and some plugins, for example YouCompleteMe
-
-## Install
-First, clone the repository:
+Clone the repository, install the system packages, then run `install.sh`:
 
 ```sh
-$ git clone https://github.com/eliaskosunen/dotfiles ~/dotfiles
-$ cd dotfiles
+git clone https://github.com/eliaskosunen/dotfiles ~/code/projects/dotfiles
+cd ~/code/projects/dotfiles
+./prereqs-dnf.sh    # Fedora
+./prereqs-apt.sh    # Ubuntu
+./install.sh
 ```
 
-Alternatively, download the tarball if you don't want to use git.
-Please note that the script will install git if it isn't present in the system.
+The prereqs scripts install C and C++ development tools, command-line tools, and
+the desktop apps I use (Chrome, VS Code, Steam, and Flatpak apps from Flathub),
+and set up Docker and Tailscale.
+They install mostly the same set on both distributions, adding the third-party
+repositories that are needed.
+Note that they're meant for a desktop machine, not a server.
+
+`install.sh` links the dotfiles, and installs Oh My Zsh with its plugins, the
+Hack Nerd Font, Rust (through rustup), Node.js (through nvm) and the Vim plugins.
+It makes zsh the login shell, too.
+Existing files in the way are moved to `~/.dotfiles-backup/<date>/`, so nothing
+is overwritten.
+It's safe to run again: links that already exist and tools that are already
+installed are left alone.
+
+To keep shell startup fast, `.zshrc` loads nvm only when `nvm` is first run, so
+`node` isn't in `PATH` until, e.g., `nvm use` has been run in that shell.
+
+Because the dotfiles are symbolic links into the repository, editing
+`~/.zshrc` edits the file in the repository, and the change shows up in
+`git status`.
+The same applies to tools that edit these files themselves, e.g.,
+`git config --global`.
+
+## Machine-specific settings
+
+`install.sh` creates three files from `templates/` that aren't tracked:
+
+ - `~/.zshrc.local`, sourced at the end of `~/.zshrc`
+ - `~/.gitconfig.local`, included at the end of `~/.gitconfig`, e.g., for the
+   commit signing key
+ - `~/.gdbinit.local`, sourced from `~/.gdbinit`, e.g., for
+   `add-auto-load-safe-path`
+
+To write git settings there instead of into the tracked file, use
+`git config --file ~/.gitconfig.local`, or for `git maintenance`,
+`git maintenance register --config-file ~/.gitconfig.local`.
+
+## Secrets
+
+Secrets, such as API tokens, are kept in the login keyring (GNOME Keyring or
+KWallet), not in a file.
+To store one, run:
 
 ```sh
-$ wget https://github.com/eliaskosunen/dotfiles/archive/master.tar.gz
-$ tar xzf master.tar.gz
-$ cd dotfiles-master
+secret-tool store --label=EXAMPLE_TOKEN env EXAMPLE_TOKEN
 ```
 
-After that, run the prerequisite installer. There are three scripts for three package managers: `apt` (Debian, \*Ubuntu), `dnf` (Fedora) and `pacman` (Arch).
+`.zshrc` defines two functions for reading them back.
+`keyring_export NAME...` exports secrets to the shell, and is meant to be called
+from `~/.zshrc.local`.
+`with_secrets NAME... -- command args...` passes secrets to a single command
+only, so that other programs started from the shell can't read them.
+Prefer `with_secrets` when only one tool needs the secret.
 
-Finally, run the actual installation script `install.sh`. Back up your dotfiles before running it, because the script may replace them.
-
-The script will give additional instructions in the end to finish the setup.
+Note that the keyring is unlocked when logging in to a desktop session.
+Over SSH, or on a machine without one, `secret-tool` can't read it.
+`keyring_export` then skips the secret, and `with_secrets` fails.
 
 ## License
 
-Unlicense (Public domain), see LICENSE for details
+Public domain (the Unlicense), see `LICENSE`.
