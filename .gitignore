@@ -1,1 +1,4 @@
 *.deb
+
+# The global ignore list (files/.config/git/ignore) excludes .gdbinit
+!/files/.gdbinit

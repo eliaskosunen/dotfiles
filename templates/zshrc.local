@@ -1,0 +1,7 @@
+# Machine-specific shell settings, sourced at the end of ~/.zshrc.
+# Don't put secrets here in plain text. Store them in the keyring instead:
+#   secret-tool store --label=NAME env NAME
+# and then either export them to every shell:
+#   keyring_export NAME...
+# or pass them to a single command only:
+#   with_secrets NAME... -- command args...

@@ -1,0 +1,11 @@
+# Machine-specific git settings, included from ~/.gitconfig.
+
+# To sign commits, set the key and enable signing:
+#[user]
+#    signingkey = <key id>
+#[commit]
+#    gpgsign = true
+
+# Repositories for `git maintenance` to keep optimized:
+#[maintenance]
+#    repo = /path/to/repo

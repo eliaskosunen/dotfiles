@@ -1,0 +1,10 @@
+build/
+build-*/
+cmake-build-*/
+.idea/
+.gdbinit
+.vscode/
+CLAUDE.md
+.claude/
+HANDOFF.md
+.local/

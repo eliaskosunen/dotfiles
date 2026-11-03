@@ -1,0 +1,3 @@
+# Machine-specific gdb settings, sourced from ~/.gdbinit.
+# For example, to trust the .gdbinit of a project:
+#add-auto-load-safe-path /path/to/project/.gdbinit

@@ -7,13 +7,8 @@
     tool = vimdiff
 [merge]
     tool = vimdiff
+    conflictstyle = zdiff3
 
-[color]
-    branch = auto
-    diff = auto
-    status = auto
-    showbranch = auto
-    ui = true
 [color "branch"]
     current = yellow reverse
     local = yellow
@@ -28,21 +23,34 @@
     changed = yellow
     untracked = cyan
 
-[core]
-    excludesFile = /home/elias/.gitignore
-[init]
-    defaultBranch = master
-
 [url "git@github.com:"]
     insteadOf = gh:
     insteadOf = github:
 [url "git@github.com:eliaskosunen/"]
     insteadOf = ek:
-[url "git@gitlab.com:"]
+[url "https://gitlab.com/"]
     insteadOf = gl:
     insteadOf = gitlab:
-[url "git@bitbucket.org:"]
+[url "https://bitbucket.org/"]
     insteadOf = bb:
     insteadOf = bitbucket:
-[url "git@gist.github.com:"]
+[url "https://gist.github.com/"]
     insteadOf = gist:
+[core]
+    fsmonitor = true
+[init]
+    defaultBranch = master
+[push]
+    autoSetupRemote = true
+[rerere]
+    enabled = true
+    autoUpdate = true
+[branch]
+    sort = -committerdate
+[rebase]
+    updateRefs = true
+
+# Machine-specific settings (signing key, maintenance repos), not tracked in the
+# dotfiles repo. Last, so that it can override anything above.
+[include]
+    path = ~/.gitconfig.local

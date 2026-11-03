@@ -3,6 +3,7 @@
 # Shortcuts
 alias c="cd ~/code"
 alias p="cd ~/code/projects"
+alias gti="git"
 
 # List all files in colorized long format
 alias ll="ls -lF --color"
@@ -15,8 +16,6 @@ alias lsd="ls -lF --color | grep --color=never '^d'"
 
 # Always enable colored `grep` output
 alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
 
 alias sudo='sudo '
 
@@ -26,12 +25,29 @@ alias week='date +%V'
 # Stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
 
-# View HTTP traffic
-alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
-alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+# IP addresses of all interfaces
+alias ips='ip -brief address'
+
+# Ubuntu installs bat as batcat
+if ! command -v bat > /dev/null && command -v batcat > /dev/null; then
+    alias bat="batcat"
+fi
 
 # Canonical hex dump; some systems have this symlinked
 command -v hd > /dev/null || alias hd="hexdump -C"
 
 # Reload the shell (i.e. invoke as a login shell)
 alias reload="exec $SHELL -l"
+
+# Print each PATH entry on a separate line
+alias path='echo -e ${PATH//:/\\n}'
+
+# Seem like a 1337 HaXX0r
+alias hax="cat /dev/urandom | hd"
+
+#export CMAKE_GENERATOR='Ninja'
+export CMAKE_C_COMPILER_LAUNCHER='ccache'
+export CMAKE_CXX_COMPILER_LAUNCHER='ccache'
+#export LDFLAGS='-fuse-ld=mold'
+
+export CLAUDE_STATUSLINE_NERDFONT=1

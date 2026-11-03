@@ -1,5 +1,5 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""" Vuncle.vim
+""" Vundle.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible
 filetype off
@@ -9,10 +9,16 @@ call vundle#begin()
 
 " Package manager
 Plugin 'VundleVim/Vundle.vim'
+" clang-format
+Plugin 'rhysd/vim-clang-format'
 " Statusline
 Plugin 'itchyny/lightline.vim'
 " Directory listings
-Plugin 'scrooloose/nerdtree'
+Plugin 'preservim/nerdtree'
+" Most recently used files
+Plugin 'yegappan/mru'
+" Comment selection out
+Plugin 'tpope/vim-commentary'
 " Git
 Plugin 'tpope/vim-fugitive'
 " Stacking yank history
@@ -21,10 +27,12 @@ Plugin 'maxbrunsfeld/vim-yankstack'
 Plugin 'flazz/vim-colorschemes'
 " Swap windows with <leader>ww
 Plugin 'wesQ3/vim-windowswap'
-" Indentation indicators
-Plugin 'Yggdroot/indentLine'
+" Beautify JS
+Plugin 'maksimr/vim-jsbeautify'
 " UNIX helpers
 Plugin 'tpope/vim-eunuch'
+" s-selector for surroundings
+Plugin 'tpope/vim-surround'
 " Detect indentation
 Plugin 'tpope/vim-sleuth'
 " HTML, CSS, JS
@@ -43,6 +51,9 @@ set history=500
 " Automatically read when a file is changed outside the editor
 set autoread
 
+" Don't run settings embedded in opened files
+set nomodeline
+
 " Map leader to Space
 let mapleader = "\<Space>"
 let g:mapleader = "\<Space>"
@@ -51,7 +62,7 @@ let g:mapleader = "\<Space>"
 nmap <leader>w :w<cr>
 
 " :WW sudo saves the file
-command WW w !sudo tee % > /dev/null
+command! WW w !sudo tee % > /dev/null
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ UI
@@ -60,7 +71,6 @@ command WW w !sudo tee % > /dev/null
 " 7 lines to the cursor when browsing with jk
 set scrolloff=8
 
-let $LANG='en'
 set langmenu=en
 
 " Set up WiLd menu
@@ -150,8 +160,7 @@ set guioptions-=L
 set nowb
 set noswapfile
 
-set backupdir = "~/.vim/tmp/backup/'
-set undodir = "~/.vim/tmp/undo/'
+set undodir=~/.vim/tmp/undo//
 set undofile
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -199,7 +208,7 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " Close current buffer
-map <leader>bd :Bclose<cr>:tabclose<cr>gT
+map <leader>bd :Bclose<cr>
 
 " Close all buffers
 map <leader>ba :bufdo bd<cr>
@@ -217,13 +226,16 @@ map <leader>t<leader> :tabnext
 " Toggle between the current and the last accessed tab
 let g:lasttab = 1
 nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
+augroup last_tab
+    autocmd!
+    autocmd TabLeave * let g:lasttab = tabpagenr()
+augroup END
 
 " Open a new tab in the directory of the current buffer
 map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
 " Switch CWD to the directory of the current buffer
-map <leader>cd :dc %:p:h<cr>:pwd<cr>
+map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 try
     set switchbuf=useopen,usetab,newtab
@@ -232,7 +244,10 @@ catch
 endtry
 
 " Return to last edit position when opening files
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup last_position
+    autocmd!
+    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Status line
@@ -245,16 +260,19 @@ set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ 
 """ Mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Let yankstack set up its mappings first, so that the y and p mappings below
+" take precedence
+call yankstack#setup()
+
 " System clipboard
-vmap <leader>y "+y
-vmap <leader>d "+d
-nmap <leader>p "+p
-nmap <leader>P "+P
-vmap <leader>p "+p
-vmap <leader>P "+P
+vnoremap <leader>y "+y
+vnoremap <leader>d "+d
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
 
 vnoremap <silent> y y`]
-vnoremap <silent> p p`]
 nnoremap <silent> p p`]
 
 " Move a line of text with ALT+[jk]
@@ -272,9 +290,10 @@ fun! CleanExtraSpaces()
     call setreg('/', old_query)
 endfun
 
-if has("autocmd")
+augroup clean_extra_spaces
+    autocmd!
     autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
-endif
+augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Spellcheck
@@ -301,28 +320,24 @@ map <leader>q :e ~/buffer<cr>
 map <leader>x :e ~/buffer.md<cr>
 
 " Toggle paste mode on and off
-map <leader>pp :sellocal paste!<cr>
+map <leader>pp :setlocal paste!<cr>
 
-vnoremap $1 <esc>`>a)<esc>`<i(<esc>
-vnoremap $2 <esc>`>a]<esc>`<i[<esc>
-vnoremap $3 <esc>`>a}<esc>`<i{<esc>
-vnoremap $$ <esc>`>a"<esc>`<i"<esc>
-vnoremap $q <esc>`>a'<esc>`<i'<esc>
-vnoremap $e <esc>`>a"<esc>`<i"<esc>
+augroup css_omnifunc
+    autocmd!
+    autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+augroup END
 
-" Map auto complete of (, ", ', [
-inoremap $1 ()<esc>i
-inoremap $2 []<esc>i
-inoremap $3 {}<esc>i
-inoremap $4 {<esc>o}<esc>O
-inoremap $q ''<esc>i
-inoremap $e ""<esc>i
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Search and replace
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+" Search and replace selection
+vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " MRU
 let MRU_Max_Entries = 400
 map <leader>f :MRU<CR>
@@ -343,45 +358,6 @@ if get(g:, '_has_set_default_indent_settings', 0) == 0
     set shiftwidth=4
     let g:_has_set_default_indent_settings = 1
 endif
-
-" TableMode
-let g:table_mode_corner="|"
-
-" ALE
-let g:ale_c_parse_compile_commands = 1
-let g:ale_c_parse_makefile = 1
-
-" Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-" Python
-let g:syntastic_python_checkers=['pyflakes']
-
-" Javascript
-let g:syntastic_javascript_checkers = ['jshint']
-
-" Go
-let g:syntastic_go_checkers = ['go', 'golint', 'errcheck']
-
-" Custom CoffeeScript SyntasticCheck
-func! SyntasticCheckCoffeescript()
-    let l:filename = substitute(expand("%:p"), '\(\w\+\)\.coffee', '.coffee.\1.js', '')
-    execute "tabedit " . l:filename
-    execute "SyntasticCheck"
-    execute "Errors"
-endfunc
-nnoremap <silent> <leader>c :call SyntasticCheckCoffeescript()<cr>
-
-" Git gutter
-let g:gitgutter_enabled=0
-nnoremap <silent> <leader>d :GitGutterToggle<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Helper functions
@@ -416,30 +392,6 @@ function! <SID>BufcloseCloseIt()
    endif
 endfunction
 
-func! DeleteTillSlash()
-    let g:cmd = getcmdline()
-
-    if has("win16") || has("win32")
-        let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\]\\).*", "\\1", "")
-    else
-        let g:cmd_edited = substitute(g:cmd, "\\(.*\[/\]\\).*", "\\1", "")
-    endif
-
-    if g:cmd == g:cmd_edited
-        if has("win16") || has("win32")
-            let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\\]\\).*\[\\\\\]", "\\1", "")
-        else
-            let g:cmd_edited = substitute(g:cmd, "\\(.*\[/\]\\).*/", "\\1", "")
-        endif
-    endif   
-
-    return g:cmd_edited
-endfunc
-
-func! CurrentFileDir(cmd)
-    return a:cmd . " " . expand("%:p:h") . "/"
-endfunc
-
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
     emenu Foo.Bar
@@ -453,9 +405,7 @@ function! VisualSelection(direction, extra_filter) range
     let l:pattern = escape(@", "\\/.*'$^~[]")
     let l:pattern = substitute(l:pattern, "\n$", "", "")
 
-    if a:direction == 'gv'
-        call CmdLine("Ack '" . l:pattern . "' " )
-    elseif a:direction == 'replace'
+    if a:direction == 'replace'
         call CmdLine("%s" . '/'. l:pattern . '/')
     endif
 
@@ -473,19 +423,24 @@ function! s:Repl()
     return "p@=RestoreRegister()\<cr>"
 endfunction
 
-vmap <silent> <expr> p <sid>Repl()
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""" Command mode
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-cno $h e ~/
-cno $p e ~/code/projects/
-cno $d e ./
-cno $c e <C-\>eCurrentFileDir("e")<cr>
-cno $q <C-\>eDeleteTillSlash()<cr>
+vnoremap <silent> <expr> p <sid>Repl()
 
 try
     colorscheme peaksea
 catch
 endtry
+
+" Indentation guides, one per shiftwidth, without conceal
+set list
+set listchars=tab:│\ ,trail:·
+function! s:UpdateIndentGuides() abort
+    let &l:listchars = &g:listchars
+                \ . ',leadmultispace:│' . repeat(' ', shiftwidth() - 1)
+endfunction
+augroup indent_guides
+    autocmd!
+    autocmd ColorScheme * highlight SpecialKey ctermfg=238 guifg=#484848
+    autocmd BufWinEnter,FileType * call s:UpdateIndentGuides()
+    autocmd OptionSet shiftwidth,tabstop call s:UpdateIndentGuides()
+augroup END
+highlight SpecialKey ctermfg=238 guifg=#484848
