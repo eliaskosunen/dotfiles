@@ -1,63 +1,130 @@
-#!/bin/zsh
+#!/usr/bin/env bash
+# Links the dotfiles into $HOME and installs the user-level tools they use.
+# Run a prereqs-*.sh script first. Safe to run again: existing setups are kept.
 
-echo " ***** Remove Oh My Zsh ***** "
-rm -rf ~/.oh-my-zsh
+set -euo pipefail
 
-echo " ***** Install dotfiles ***** "
-cp -r ./files/. ~
+repo=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+backup="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
-echo " ***** Setup Zsh ***** "
-echo " ***** Installing Oh My Zsh ***** "
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-echo " ***** Setting up aliases ***** "
-echo "source ~/.bash_aliases" >> ~/.zshrc
-echo "export DEFAULT_USER=`whoami`" >> ~/.zshrc
-source ~/.profile
-source ~/.zshrc
-
-echo " ***** Installing Powerlevel9k theme ***** "
-git clone gh:bhilburn/powerlevel9k $ZSH_CUSTOM/themes/powerlevel9k
-echo " ***** Installing Zsh syntax highlighting plugin ***** "
-git clone gh:zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-echo " ***** Installing Zsh autosuggestions plugin ***** "
-git clone gh:zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
-
-echo " ***** Install Powerline fonts for Zsh ***** "
-git clone gh:powerline/fonts powerline-fonts
-cd powerline-fonts
-./install.sh
-cd ..
-rm -rf powerline-fonts
-
-echo " ***** Make Zsh the default shell ***** "
-chsh -s $(which zsh)
-
-echo " ***** Install Hack (font) ***** "
-get_latest_github_release() {
-    curl --silent "https://api.github.com/repos/$1/releases/latest" |
-        grep '"tag_name":' |
-        sed -E 's/.*"([^"]+)".*/\1/'
+step() {
+    printf '\n\033[1m==> %s\033[0m\n' "$*"
 }
-HACK_VERSION=$(get_latest_github_release "source-foundry/Hack")
-curl -sL https://github.com/source-foundry/Hack/releases/download/${HACK_VERSION}/Hack-${HACK_VERSION}-ttf.tar.gz | tar xz
-mkdir -p ~/.fonts/hack
-cp ttf/* ~/.fonts/hack
-rm -rf ttf
-sudo fc-cache -fv
 
-echo " ***** Setup Vim ***** "
-EXEC_DIR=$(pwd)
-mkdir -p ~/.vim/tmp ~/.vim/colors
-git clone gh:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-mkdir ~/.vim/tmp/backup ~/.vim/tmp/undo
-cd $EXEC_DIR
+for command in git curl zsh vim; do
+    if ! command -v "$command" > /dev/null; then
+        echo "$command not found, run prereqs-dnf.sh or prereqs-apt.sh first" >&2
+        exit 1
+    fi
+done
+
+step "Linking dotfiles"
+cd "$repo/files"
+find . -type f -printf '%P\n' | sort | while read -r file; do
+    source="$repo/files/$file"
+    target="$HOME/$file"
+    if [ "$(readlink "$target" 2> /dev/null)" = "$source" ]; then
+        continue
+    fi
+    if [ -e "$target" ] || [ -L "$target" ]; then
+        mkdir -p "$(dirname "$backup/$file")"
+        mv "$target" "$backup/$file"
+        echo "Backed up ~/$file"
+    fi
+    mkdir -p "$(dirname "$target")"
+    ln -s "$source" "$target"
+    echo "Linked ~/$file"
+done
+cd "$repo"
+if [ -d "$backup" ]; then
+    echo "Previous files are in $backup"
+fi
+
+step "Creating local config files"
+for name in zshrc gitconfig gdbinit; do
+    target="$HOME/.$name.local"
+    if [ ! -e "$target" ]; then
+        cp "$repo/templates/$name.local" "$target"
+        chmod 600 "$target"
+        echo "Created ~/.$name.local"
+    fi
+done
+
+step "Installing Oh My Zsh"
+if [ -d "$HOME/.oh-my-zsh" ]; then
+    echo "Already installed"
+else
+    # KEEP_ZSHRC stops the installer from replacing the linked ~/.zshrc
+    curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh |
+        KEEP_ZSHRC=yes sh -s -- --unattended
+fi
+
+step "Installing Oh My Zsh plugins"
+plugins="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
+for plugin in zsh-autosuggestions zsh-syntax-highlighting; do
+    if [ -d "$plugins/$plugin" ]; then
+        echo "$plugin already installed"
+    else
+        git clone --depth 1 "https://github.com/zsh-users/$plugin" "$plugins/$plugin"
+    fi
+done
+
+step "Installing Hack Nerd Font"
+fonts="$HOME/.local/share/fonts/NerdFonts"
+if compgen -G "$fonts/HackNerdFont*" > /dev/null; then
+    echo "Already installed"
+else
+    mkdir -p "$fonts"
+    curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.tar.xz |
+        tar -xJ -C "$fonts" --wildcards 'HackNerdFont*.ttf'
+    fc-cache -f "$fonts"
+fi
+
+step "Installing Rust"
+if command -v rustup > /dev/null || [ -x "$HOME/.cargo/bin/rustup" ]; then
+    echo "Already installed"
+else
+    # ~/.zshenv already sources ~/.cargo/env
+    curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path
+fi
+
+step "Installing nvm and Node.js"
+if [ -s "$HOME/.nvm/nvm.sh" ]; then
+    echo "Already installed"
+else
+    nvm_version=$(curl -fsSL https://api.github.com/repos/nvm-sh/nvm/releases/latest |
+        sed -nE 's/.*"tag_name": *"([^"]+)".*/\1/p')
+    # PROFILE=/dev/null stops the installer from editing ~/.zshrc, which
+    # already loads nvm
+    curl -fsSL "https://raw.githubusercontent.com/nvm-sh/nvm/$nvm_version/install.sh" |
+        PROFILE=/dev/null bash
+    # nvm.sh isn't written for `set -u`
+    set +u
+    # shellcheck source=/dev/null
+    . "$HOME/.nvm/nvm.sh"
+    nvm install --lts
+    set -u
+fi
+
+step "Setting up Vim"
+mkdir -p "$HOME/.vim/tmp/undo"
+if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
+    git clone --depth 1 https://github.com/VundleVim/Vundle.vim "$HOME/.vim/bundle/Vundle.vim"
+fi
 vim +PluginInstall +qall
-cp ~/.vim/bundle/vim-colorschemes/colors/* ~/.vim/colors
 
-echo "What you need to do now:"
-echo " 1) Edit ~/.zshrc:"
-echo "    - Change theme to either 'agnoster' or 'powerlevel9k/powerlevel9k'"
-echo "    - Add following plugins: command-not-found colored-man-pages colorize cp git extract node npm pip python virtualenv web-search zsh-autosuggestions zsh-syntax-highlighting"
-echo "    - Add plugin for your operating system: archlinux, debian, brew, dnf, systemd"
-echo "    - Export 'vim' as EDITOR"
-echo " 2) Relogin to make Zsh the default shell"
+step "Making zsh the login shell"
+zsh_path=$(command -v zsh)
+if [ "$(getent passwd "$USER" | cut -d: -f7)" = "$zsh_path" ]; then
+    echo "Already the login shell"
+else
+    chsh -s "$zsh_path"
+    echo "Log out and back in for the change to take effect"
+fi
+
+step "Done"
+cat << 'EOF'
+Machine-specific settings go in ~/.zshrc.local, ~/.gitconfig.local and
+~/.gdbinit.local, which aren't tracked. To sign commits, set your key in
+~/.gitconfig.local. Set the terminal font to "Hack Nerd Font Mono".
+EOF
